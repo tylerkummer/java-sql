@@ -76,7 +76,9 @@ WHERE supplier_id = 11;
   </details>
 
 ```SQL
-
+SELECT *  
+FROM orders  
+ORDER BY order_date DESC
 ```
 
 * [ ] ***find all suppliers who have names longer than 20 characters. Returns 11 records***
@@ -88,7 +90,9 @@ WHERE supplier_id = 11;
   </details>
 
 ```SQL
-
+SELECT *  
+FROM suppliers  
+WHERE length(company_name) > 20
 ```
 
 * [ ] ***find all customers that include the word 'MARKET' in the contact title. Should return 19 records***
@@ -101,7 +105,9 @@ WHERE supplier_id = 11;
   </details>
 
 ```SQL
-
+SELECT *
+FROM customers
+WHERE upper(contact_title) LIKE '%MARKET%'
 ```
 
 * [ ] ***add a customer record for***
@@ -118,7 +124,8 @@ WHERE supplier_id = 11;
   </details>
 
 ```SQL
-
+INSERT INTO customers (customer_id, company_name, contact_name, address, city, postal_code, country)
+VALUES ('SHIRE', 'The Shire', 'Bilbo Baggins', '1 Hobbit-Hole', 'Bag End', '111', 'Middle Earth')
 ```
 
 * [ ] ***update _Bilbo Baggins_ record so that the postal code changes to _"11122"_***
@@ -129,7 +136,9 @@ WHERE supplier_id = 11;
   </details>
 
 ```SQL
-
+UPDATE customers
+SET postal_code = '11122'
+WHERE contact_name = 'Bilbo Baggins'
 ```
 
 * [ ] ***list orders grouped and ordered by customer company name showing the number of orders per customer company name. _Rattlesnake Canyon Grocery_ should have 18 orders***
@@ -141,7 +150,11 @@ WHERE supplier_id = 11;
   </details>
 
 ```SQL
-
+SELECT c.company_name, count(*)
+FROM orders o JOIN customers c
+ON o.customer_id = c.customer_id
+GROUP BY c.company_name
+ORDER BY c.company_name
 ```
 
 * [ ] ***list customers by contact name and the number of orders per contact name. Sort the list by the number of orders in descending order. _Jose Pavarotti_ should be at the top with 31 orders followed by _Roland Mendal_ with 30 orders. Last should be _Francisco Chang_ with 1 order***
@@ -152,7 +165,11 @@ WHERE supplier_id = 11;
   </details>
 
 ```SQL
-
+SELECT c.contact_name, count(o.order_id) as orders
+FROM orders o JOIN customers c
+ON o.customer_id = c.customer_id
+GROUP BY c.contact_name
+ORDER BY orders desc
 ```
 
 * [ ] ***list orders grouped by customer's city showing the number of orders per city. Returns 69 Records with _Aachen_ showing 6 orders and _Albuquerque_ showing 18 orders***
@@ -163,7 +180,11 @@ WHERE supplier_id = 11;
   </details>
 
 ```SQL
-
+SELECT c.city AS CITY, count(*) AS TOTAL
+FROM orders o JOIN customers c
+ON o.customer_id = c.customer_id
+GROUP BY c.city
+ORDER BY CITY
 ```
 
 ## Data Normalization
@@ -183,41 +204,35 @@ Below are some empty tables to be used to normalize the database
 * Not all of the cells will contain data in the final solution
 * Feel free to edit these tables as necessary
 
-Table Name:
+Table Name: Person
 
-|            |            |            |            |            |            |            |            |            |
-|------------|------------|------------|------------|------------|------------|------------|------------|------------|
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
+| Person id | Person Name | Fenced Yard | City Dweller |
+|-----------|-------------|-------------|--------------|
+| 1         | Jane        | No          | Yes          |
+| 2         | Bob         | No          | No           |
+| 3         | Sam         | Yes         | No           |
 
-Table Name:
+Table Name: Pet
 
-|            |            |            |            |            |            |            |            |            |
-|------------|------------|------------|------------|------------|------------|------------|------------|------------|
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
+| Pet Id | Person Id | Pet Name   | Pet Type Id |
+|--------|-----------|------------|-------------|
+| 1      | 1         | Ellie      | 1           |
+| 2      | 1         | Tiger      | 2           |
+| 3      | 1         | Toby       | 3           |
+| 4      | 2         | Joe        | 4           |
+| 5      | 3         | Ginger     | 1           |
+| 6      | 3         | Miss Kitty | 2           |
+| 7      | 3         | Bubble     | 5           |
 
-Table Name:
+Table Name: Pet Type
 
-|            |            |            |            |            |            |            |            |            |
-|------------|------------|------------|------------|------------|------------|------------|------------|------------|
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
-|            |            |            |            |            |            |            |            |            |
+| Pet Type Id | Pet Type |
+|-------------|----------|
+| 1           | Dog      |
+| 2           | Cat      |
+| 3           | Turtle   |
+| 4           | Horse    |
+| 5           | Fish     |
 
 Table Name:
 
